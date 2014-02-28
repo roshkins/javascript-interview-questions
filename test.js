@@ -22,12 +22,39 @@
 //  }
 var attrStructure = {"tag":"(0008,0018)","value":"1.3.51.0.7.1193286233.9961.33088.48048.47436.15671.21980","attr":[{"tag":"(0008,002A)","value":"20130318124132"},{"tag":"(0008,0020)","value":"20130318"},{"tag":"(0008,0030)","value":"123650"},{"tag":"(0008,0018)","value":"1.3.51.0.7.1193286233.9961.33088.48048.47436.15671.21980"},{"tag":"(0008,0060)","value":"CR"},{"tag":"(0008,103E)","value":"SUNRISE VIEW"},{"tag":"(0018,0015)","value":"KNEE"},{"tag":"(0018,1164)","value":"0.1\\0.1"},{"tag":"(0018,5101)","value":"AP"},{"tag":"(0020,0013)","value":"2"},{"tag":"(0020,0020)","value":"L\\F"},{"tag":"(0028,0030)","value":"0.10000000149011\\0.10000000149011"},{"tag":"(0028,1052)","value":"0"},{"tag":"(0028,1053)","value":"1"},{"tag":"(0028,1054)","value":"LOG_E REL"},{"tag":"(0028,0101)","value":"12"},{"tag":"(0028,0010)","value":"2328"},{"tag":"(0028,0011)","value":"2928"},{"tag":"(0008,1030)","value":"Femur Knee Leg"},{"tag":"(0010,0010)","value":"BEAN^ELENA"},{"tag":"(0010,0020)","value":"690100"},{"tag":"(0010,0030)","value":"19400826"},{"tag":"(0010,0040)","value":"F"},{"tag":"(0010,4000)","value":"L KNEE"}]};
 
+function structs(attrStructure) {
+  var newStruct = {};
+  newStruct[attrStructure["tag"]] = attrStructure["value"];
+  newStruct["attr"] = {};
+  attrStructure["attr"].forEach(function(obj){
+    newStruct["attr"][obj["tag"]] = obj["value"];
+  });
+  return newStruct;
+}
+  
 // test that your structure is correct - use qUnit or any other test framework in an external file
 
 // loop through the above data structure and create a tree-like output on the screen. 
 // You can use jQuery to attach event handlers for hiding/showing nodes in the tree.
-
-
+  var d = document.createElement("ul");
+  var myLi = document.createElement("li");
+  d.appendChild(myLi);
+  var ret = structs(attrStructure)
+  for (i in ret){
+    myLi.innerHTML = i;
+    var val = document.createElement("li");
+    val.innerHTML = ret[i];
+    myLi.appendChild(val);
+  }
+  var notherLi = document.createElement("li");
+  for (j in ret["attr"]){
+    var aLi = document.createElement("li");
+    aLi.innerHTML = j;
+    var bLi = document.createElement("li");
+    aLi.appendChild(bLi);
+    bLi.innerHTML = ret["attr"][j];
+  }
+document.getElementsByClassName("content")[0].appendChild(d);
 // #2
 
 // given the text in the variable "corpus", write the following:
@@ -37,7 +64,24 @@ var corpus = "The ship drew on and had safely passed the strait, which some volc
 // 2. show word frequency in descending order and ascending order, based on a radio button in index.html
 // 3. show words in alphabetical order and reverse alphabetical order, with word frequency, based on a radio button in index.html
 // 4. ensure that browser does not block when calculating these frequencies
-
+var words = corpus.split(/[ ,-.?!]/);
+var frq = {};
+words.forEach(function(word){
+  if(!frq[word]){
+    frq[word] = 0;
+  } 
+  frq[word] += 1;
+});
+document.write("ascending");
+document.write(words.sort().map(function(word){
+  return frq[word];
+}).join("\n"));
+document.write("descending");
+document.write(words.sort(function(word1, word2){
+  return word1 > word2 ? 1 : -1;
+}).map(function(word){
+  return frq[word];
+}));
 
 // #3
 //
